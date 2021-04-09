@@ -1,0 +1,40 @@
+server:
+  port: 8000
+
+spring:
+  datasource:
+    username: root
+    password: 123456
+    url: jdbc:mysql://localhost:3306/local_test?characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
+  rabbitmq:
+    username: admin
+    password: admin
+    host: localhost
+    port: 5672
+    virtual-host: /
+    publisher-confirm: true #发布确认 开启confirms回调 Producer -> Exchange
+    publisher-returns: true #发布返回 开启returnedMessage回调 Exchange -> Queue
+    listener:
+      type: simple
+      simple:
+        acknowledge-mode: manual #消费端收到消息后的确认方式 manual手动确认  none自动确认
+        prefetch: 1 #消费者预取1条数据到内存
+        default-requeue-rejected: false  #决定被拒绝的消息是否重新入队。默认值为true,需要手动basicNack时这些参数谅失效了
+        retry:
+          enabled: true  #开启消费者 程序异常情况下会进行重试
+          max-attempts: 3 #重试次数
+          initial-interval: 2000 #消费者重试间隔次数 2s
+      direct:
+        default-requeue-rejected: false #消息被拒绝以后不会重新进入队列，超过最大重试次数会进入死信队列
+        acknowledge-mode: manual #消费端收到消息后的确认方式 manual手动确认  none自动确认
+        retry:
+          enabled: true  #开启消费者 程序异常情况下会进行重试
+          max-attempts: 3 #重试次数
+          initial-interval: 2000 #消费者重试间隔次数 2s
+
+#    template:
+#      reply:
+#        mandatory: true #启用强制信息
+#        enabled: true #开启消费者 程序异常情况下会进行重试
+#        max-attempts: 3 #消息最多消费次数3次
+#        initial-interval: 2000 #消重试间隔次数 2s
