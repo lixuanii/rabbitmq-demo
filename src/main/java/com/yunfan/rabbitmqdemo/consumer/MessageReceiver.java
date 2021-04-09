@@ -80,6 +80,8 @@ public class MessageReceiver {
                 return;
             }
 
+
+
             if (msgService.save(msg)) {
                 log.info("数据插入成功");
                 //正常处理成功 手动签收 消息确认 无需重试
